@@ -1,16 +1,18 @@
 import json
 import boto3
+from utils import get_secret
+from pymongo import MongoClient
 
 
-def get_db_table():
-    dynamodb_resource = boto3.resource("dynamodb")
+def get_db():
+    client = MongoClient(get_secret())
 
-    return dynamodb_resource.Table("academia")
+    return client.academia
 
 def handler(event, context):
-    ddb_table = get_db_table()
+    db = get_db()
     
-    response = ddb_table.scan()
+    response = [item for item in db.users.find()]
 
     return {
         "statusCode": 200,

@@ -11,11 +11,23 @@ provider:
           Action:
             - dynamodb:*
           Resource: '*'
+        - Effect: Allow
+          Action:
+           - secretsmanager:*
+          Resource: '*'
   
+layers:
+  dependencies:
+    path: third_party/
+    name: ${self:service}-${sls:stage}-layer
+    compatibleRuntimes:
+      - python3.10
 
 functions:
   create_inventory:
     handler: create.handler
+    layers:
+      - !Ref DependenciesLambdaLayer
     events:
       - httpApi:
           path: /
@@ -23,6 +35,8 @@ functions:
 
   list_inventory:
     handler: list.handler
+    layers:
+      - !Ref DependenciesLambdaLayer
     events:
       - httpApi:
           path: /

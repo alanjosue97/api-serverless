@@ -18,10 +18,18 @@ This template does not include any kind of persistence (database). For more adva
 
 ## Usage
 
+## Create Lambda Layer
+
+```
+pip install -r  requirements.txt -t third_party/pyhton
+```
+
 ### Deployment
 
 ```
 $ serverless deploy
+
+$ serverless deploy --stage {name-stage}
 ```
 
 After deploying, you should see output similar to:

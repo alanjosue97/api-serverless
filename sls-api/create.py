@@ -1,28 +1,28 @@
 import json
-import boto3
 
-from uuid import uuid4
+from bson import ObjectId
 
-def get_db_table():
-    dynamodb_resource = boto3.resource("dynamodb")
+from utils import get_secret
+from pymongo import MongoClient
 
-    return dynamodb_resource.Table("academia")
+def get_db():
+    client = MongoClient(get_secret())
+
+    return client.academia
 
 def handler(event, context):
-    ddb_table = get_db_table()
+    db = get_db()
     
-    print(event["body"])
-    
-    inventory_id = str(uuid4())
-
-    response = ddb_table.put_item(
-        Item = {
-            "PK": inventory_id,
+    db.users.insert_one(
+        {
+            "_id": str(ObjectId()),
             "name": "Alan",
         }
     )
 
+    
+
     return {
         "statusCode": 200,
-        "body": json.dumps(response)
+        "body": json.dumps({"messange": "User created"})
     }
